@@ -4,7 +4,6 @@ import SidebarClient, { type NavLink } from "./SidebarClient";
 const LINKS: NavLink[] = [
   { href: "/dashboard", label: "Mapa", icon: "🗺️" },
   { href: "/routes", label: "Rutas", icon: "🥾" },
-  { href: "/routes/new", label: "Nueva ruta", icon: "➕" },
   { href: "/summits/new", label: "Nueva cima", icon: "⛰️" },
   { href: "/friends", label: "Amigos", icon: "👥" },
 ];
