@@ -55,11 +55,11 @@ export default async function RouteDetailPage({
   const isOwner = user?.id === typedRoute.user_id;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
+    <div className="flex w-full min-w-0 flex-col gap-6">
+      <div className="min-w-0">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold">{typedRoute.name}</h1>
+          <div className="min-w-0">
+            <h1 className="break-words text-2xl font-bold">{typedRoute.name}</h1>
             <p className="text-sm text-neutral-500">
               @{typedRoute.owner?.username ?? "?"}
               {typedRoute.route_date ? ` · ${typedRoute.route_date}` : ""}
@@ -68,7 +68,9 @@ export default async function RouteDetailPage({
           {isOwner && <DeleteRouteButton routeId={typedRoute.id} />}
         </div>
         {typedRoute.description && (
-          <p className="mt-3 whitespace-pre-wrap text-neutral-700">{typedRoute.description}</p>
+          <p className="mt-3 whitespace-pre-wrap break-words text-neutral-700">
+            {typedRoute.description}
+          </p>
         )}
       </div>
 
