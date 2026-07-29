@@ -123,7 +123,7 @@ export default function NewRoutePage() {
     <div className="mx-auto max-w-2xl">
       <h1 className="mb-6 text-2xl font-bold">Nueva ruta</h1>
 
-      <div className="mb-6 flex gap-2">
+      <div className="mb-6 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => setMode("file")}
@@ -197,7 +197,7 @@ export default function NewRoutePage() {
           />
         </label>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <label className="flex flex-col gap-1 text-sm">
             Fecha
             <input

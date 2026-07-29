@@ -7,6 +7,8 @@ import type { RouteRow, Summit } from "@/lib/supabase/types";
 type RouteWithOwner = RouteRow & { owner: { username: string } | null };
 type SummitWithOwner = Summit & { owner: { username: string } | null };
 
+const RECENT_LIMIT = 6;
+
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
@@ -46,20 +48,36 @@ export default async function DashboardPage() {
     elevationM: s.elevation_m,
   }));
 
+  type ActivityItem =
+    | { kind: "route"; date: string | null; data: RouteWithOwner }
+    | { kind: "summit"; date: string | null; data: SummitWithOwner };
+
+  const activity: ActivityItem[] = [
+    ...routeRows.map((r): ActivityItem => ({ kind: "route", date: r.route_date, data: r })),
+    ...summitRows.map((s): ActivityItem => ({ kind: "summit", date: s.reached_at, data: s })),
+  ]
+    .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))
+    .slice(0, RECENT_LIMIT);
+
   return (
-    <div className="flex flex-col gap-8">
-      <div>
+    <div className="flex w-full min-w-0 flex-col gap-8">
+      <div className="min-w-0">
         <h1 className="mb-3 text-2xl font-bold">Tu mapa</h1>
-        <RouteMap routes={mapRoutes} summits={mapSummits} height="480px" />
+        <RouteMap routes={mapRoutes} summits={mapSummits} height="60vh" />
         <p className="mt-2 text-xs text-neutral-500">
           <span className="text-red-600">●</span> tus rutas &nbsp;
           <span className="text-blue-600">●</span> rutas de amigos
         </p>
       </div>
 
-      <div>
-        <h2 className="mb-3 text-xl font-semibold">Actividad reciente</h2>
-        {routeRows.length === 0 && summitRows.length === 0 ? (
+      <div className="min-w-0">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Actividad reciente</h2>
+          <Link href="/routes" className="text-sm text-emerald-800 underline">
+            Ver todas las rutas
+          </Link>
+        </div>
+        {activity.length === 0 ? (
           <p className="text-neutral-500">
             Aún no hay rutas ni cimas. ¡
             <Link href="/routes/new" className="text-emerald-800 underline">
@@ -69,36 +87,46 @@ export default async function DashboardPage() {
           </p>
         ) : (
           <ul className="flex flex-col gap-3">
-            {routeRows.map((route) => (
-              <li key={route.id} className="rounded-lg border border-black/10 bg-white p-4">
-                <div className="flex items-center justify-between">
-                  <Link href={`/routes/${route.id}`} className="font-semibold hover:underline">
-                    {route.name}
-                  </Link>
-                  <span className="text-xs text-neutral-500">
-                    @{route.owner?.username ?? "?"}
-                  </span>
-                </div>
-                <div className="mt-1 text-sm text-neutral-600">
-                  {route.route_date ?? "Sin fecha"} · {formatDistance(route.distance_m)} ·{" "}
-                  {formatElevation(route.elevation_gain_m)} de desnivel positivo
-                </div>
-              </li>
-            ))}
-            {summitRows.map((summit) => (
-              <li key={summit.id} className="rounded-lg border border-black/10 bg-white p-4">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold">⛰️ {summit.name}</span>
-                  <span className="text-xs text-neutral-500">
-                    @{summit.owner?.username ?? "?"}
-                  </span>
-                </div>
-                <div className="mt-1 text-sm text-neutral-600">
-                  {summit.reached_at?.slice(0, 10) ?? "Sin fecha"} ·{" "}
-                  {formatElevation(summit.elevation_m)}
-                </div>
-              </li>
-            ))}
+            {activity.map((item) =>
+              item.kind === "route" ? (
+                <li
+                  key={`route-${item.data.id}`}
+                  className="rounded-lg border border-black/10 bg-white p-4"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <Link
+                      href={`/routes/${item.data.id}`}
+                      className="truncate font-semibold hover:underline"
+                    >
+                      {item.data.name}
+                    </Link>
+                    <span className="shrink-0 text-xs text-neutral-500">
+                      @{item.data.owner?.username ?? "?"}
+                    </span>
+                  </div>
+                  <div className="mt-1 text-sm text-neutral-600">
+                    {item.data.route_date ?? "Sin fecha"} · {formatDistance(item.data.distance_m)} ·{" "}
+                    {formatElevation(item.data.elevation_gain_m)} de desnivel positivo
+                  </div>
+                </li>
+              ) : (
+                <li
+                  key={`summit-${item.data.id}`}
+                  className="rounded-lg border border-black/10 bg-white p-4"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate font-semibold">⛰️ {item.data.name}</span>
+                    <span className="shrink-0 text-xs text-neutral-500">
+                      @{item.data.owner?.username ?? "?"}
+                    </span>
+                  </div>
+                  <div className="mt-1 text-sm text-neutral-600">
+                    {item.data.reached_at?.slice(0, 10) ?? "Sin fecha"} ·{" "}
+                    {formatElevation(item.data.elevation_m)}
+                  </div>
+                </li>
+              )
+            )}
           </ul>
         )}
       </div>
