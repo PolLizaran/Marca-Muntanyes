@@ -13,16 +13,19 @@ const DIFFICULTY_LABEL: Record<string, string> = {
 
 function RouteCard({ route }: { route: RouteWithOwner }) {
   return (
-    <li className="min-w-0 rounded-lg border border-black/10 bg-white p-4">
-      <Link href={`/routes/${route.id}`} className="block truncate font-semibold hover:underline">
-        {route.name}
+    <li className="min-w-0">
+      <Link
+        href={`/routes/${route.id}`}
+        className="block min-w-0 rounded-lg border border-black/10 bg-white p-4 hover:bg-neutral-50"
+      >
+        <span className="block truncate font-semibold">{route.name}</span>
+        <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-sm text-neutral-600">
+          <span>{route.route_date ?? "Sin fecha"}</span>
+          <span>· {formatDistance(route.distance_m)}</span>
+          <span>· +{formatElevation(route.elevation_gain_m)}</span>
+          {route.difficulty && <span>· {DIFFICULTY_LABEL[route.difficulty]}</span>}
+        </div>
       </Link>
-      <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-sm text-neutral-600">
-        <span>{route.route_date ?? "Sin fecha"}</span>
-        <span>· {formatDistance(route.distance_m)}</span>
-        <span>· +{formatElevation(route.elevation_gain_m)}</span>
-        {route.difficulty && <span>· {DIFFICULTY_LABEL[route.difficulty]}</span>}
-      </div>
     </li>
   );
 }
@@ -78,23 +81,23 @@ export default async function RoutesPage() {
           <h2 className="mb-3 text-lg font-semibold">Rutas de amigos ({friendRoutes.length})</h2>
           <ul className="flex flex-col gap-3">
             {friendRoutes.map((route) => (
-              <li key={route.id} className="min-w-0 rounded-lg border border-black/10 bg-white p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <Link
-                    href={`/routes/${route.id}`}
-                    className="truncate font-semibold hover:underline"
-                  >
-                    {route.name}
-                  </Link>
-                  <span className="shrink-0 text-xs text-neutral-500">
-                    @{route.owner?.username ?? "?"}
-                  </span>
-                </div>
-                <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-sm text-neutral-600">
-                  <span>{route.route_date ?? "Sin fecha"}</span>
-                  <span>· {formatDistance(route.distance_m)}</span>
-                  <span>· +{formatElevation(route.elevation_gain_m)}</span>
-                </div>
+              <li key={route.id} className="min-w-0">
+                <Link
+                  href={`/routes/${route.id}`}
+                  className="block min-w-0 rounded-lg border border-black/10 bg-white p-4 hover:bg-neutral-50"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate font-semibold">{route.name}</span>
+                    <span className="shrink-0 text-xs text-neutral-500">
+                      @{route.owner?.username ?? "?"}
+                    </span>
+                  </div>
+                  <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-sm text-neutral-600">
+                    <span>{route.route_date ?? "Sin fecha"}</span>
+                    <span>· {formatDistance(route.distance_m)}</span>
+                    <span>· +{formatElevation(route.elevation_gain_m)}</span>
+                  </div>
+                </Link>
               </li>
             ))}
           </ul>
