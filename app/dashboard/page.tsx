@@ -89,25 +89,22 @@ export default async function DashboardPage() {
           <ul className="flex flex-col gap-3">
             {activity.map((item) =>
               item.kind === "route" ? (
-                <li
-                  key={`route-${item.data.id}`}
-                  className="rounded-lg border border-black/10 bg-white p-4"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <Link
-                      href={`/routes/${item.data.id}`}
-                      className="truncate font-semibold hover:underline"
-                    >
-                      {item.data.name}
-                    </Link>
-                    <span className="shrink-0 text-xs text-neutral-500">
-                      @{item.data.owner?.username ?? "?"}
-                    </span>
-                  </div>
-                  <div className="mt-1 text-sm text-neutral-600">
-                    {item.data.route_date ?? "Sin fecha"} · {formatDistance(item.data.distance_m)} ·{" "}
-                    {formatElevation(item.data.elevation_gain_m)} de desnivel positivo
-                  </div>
+                <li key={`route-${item.data.id}`} className="min-w-0">
+                  <Link
+                    href={`/routes/${item.data.id}`}
+                    className="block min-w-0 rounded-lg border border-black/10 bg-white p-4 hover:bg-neutral-50"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="truncate font-semibold">{item.data.name}</span>
+                      <span className="shrink-0 text-xs text-neutral-500">
+                        @{item.data.owner?.username ?? "?"}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-sm text-neutral-600">
+                      {item.data.route_date ?? "Sin fecha"} · {formatDistance(item.data.distance_m)} ·{" "}
+                      {formatElevation(item.data.elevation_gain_m)} de desnivel positivo
+                    </div>
+                  </Link>
                 </li>
               ) : (
                 <li

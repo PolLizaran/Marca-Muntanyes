@@ -33,7 +33,7 @@ export default function SidebarClient({
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-black/10 bg-white px-4 py-3 md:hidden">
+      <header className="sticky top-0 z-[1000] flex items-center gap-3 border-b border-black/10 bg-white px-4 py-3 md:hidden">
         <button
           aria-label="Abrir menú"
           onClick={() => setOpen(true)}
@@ -48,14 +48,14 @@ export default function SidebarClient({
 
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 md:hidden"
+          className="fixed inset-0 z-[1000] bg-black/40 md:hidden"
           onClick={() => setOpen(false)}
           aria-hidden
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 max-w-[80vw] transform flex-col border-r border-black/10 bg-white transition-transform duration-200 ease-in-out md:sticky md:top-0 md:h-screen md:w-56 md:translate-x-0 md:shrink-0 ${
+        className={`fixed inset-y-0 left-0 z-[1010] flex w-64 max-w-[80vw] transform flex-col border-r border-black/10 bg-white transition-transform duration-200 ease-in-out md:sticky md:top-0 md:h-screen md:w-56 md:translate-x-0 md:shrink-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >

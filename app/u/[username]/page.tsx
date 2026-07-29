@@ -59,14 +59,17 @@ export default async function ProfilePage({
           />
           <ul className="flex flex-col gap-3">
             {routeRows.map((route) => (
-              <li key={route.id} className="rounded-lg border border-black/10 bg-white p-4">
-                <Link href={`/routes/${route.id}`} className="font-semibold hover:underline">
-                  {route.name}
+              <li key={route.id} className="min-w-0">
+                <Link
+                  href={`/routes/${route.id}`}
+                  className="block min-w-0 rounded-lg border border-black/10 bg-white p-4 hover:bg-neutral-50"
+                >
+                  <span className="block truncate font-semibold">{route.name}</span>
+                  <div className="mt-1 text-sm text-neutral-600">
+                    {route.route_date ?? "Sin fecha"} · {formatDistance(route.distance_m)} ·{" "}
+                    {formatElevation(route.elevation_gain_m)} de desnivel positivo
+                  </div>
                 </Link>
-                <div className="mt-1 text-sm text-neutral-600">
-                  {route.route_date ?? "Sin fecha"} · {formatDistance(route.distance_m)} ·{" "}
-                  {formatElevation(route.elevation_gain_m)} de desnivel positivo
-                </div>
               </li>
             ))}
           </ul>
